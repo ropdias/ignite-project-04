@@ -1,8 +1,8 @@
 export class Slug {
-  public value: string;
+  public value: string
 
   constructor(value: string) {
-    this.value = value;
+    this.value = value
   }
 
   /**
@@ -21,8 +21,8 @@ export class Slug {
       .replace(/[^\w-]+/g, '') // We will remove everything that is not a word (like symbols)
       .replace(/_/g, '-') // changing all underline for "-"
       .replace(/--+/g, '-') // if we have two "-" replace for only one "-"
-      .replace(/-$/g, ''); // if in the end we have a "-" we will remove it
+      .replace(/-$/g, '') // if in the end we have a "-" we will remove it
 
-    return new Slug(slugText);
+    return new Slug(slugText)
   }
 }
