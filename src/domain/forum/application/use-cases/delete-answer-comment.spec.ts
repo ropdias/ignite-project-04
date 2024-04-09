@@ -2,6 +2,7 @@ import { InMemoryAnswerCommentsRepository } from 'test/repositories/in-memory-an
 import { DeleteAnswerCommentUseCase } from './delete-answer-comment'
 import { makeAnswerComment } from 'test/factories/make-answer-comment'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { NotAllowedError } from './errors/not-allowed-error'
 
 let ineMemoryAnswerCommentsRepository: InMemoryAnswerCommentsRepository
 let sut: DeleteAnswerCommentUseCase
@@ -33,11 +34,20 @@ describe('Delete Answer Comment', () => {
 
     await ineMemoryAnswerCommentsRepository.create(answerComment)
 
-    expect(async () => {
-      return await sut.execute({
-        answerCommentId: answerComment.id.toString(),
-        authorId: 'author-2',
-      })
-    }).rejects.toBeInstanceOf(Error)
+    const result = await sut.execute({
+      answerCommentId: answerComment.id.toString(),
+      authorId: 'author-2',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+
+    // The code below was being used when we were handling errors with throw:
+    // expect(async () => {
+    //   return await sut.execute({
+    //     answerCommentId: answerComment.id.toString(),
+    //     authorId: 'author-2',
+    //   })
+    // }).rejects.toBeInstanceOf(Error)
   })
 })
